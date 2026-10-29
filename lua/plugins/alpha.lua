@@ -1,77 +1,33 @@
 return {
   {
     "nvimdev/dashboard-nvim",
-    event = "VimEnter",
-    dependencies = {
-      "nvim-tree/nvim-web-devicons",
-    },
+    enabled = false,
+  },
+  {
+    dir = vim.fn.stdpath("config"),
+    name = "ascii-sharks-startup",
+    lazy = false,
+    priority = 900,
     config = function()
-      require("dashboard").setup({
-        theme = "hyper",
+      local sharks = require("ascii-sharks")
 
-        config = {
-          week_header = {
-            enable = true,
-          },
+      vim.api.nvim_create_user_command("Sharks", function()
+        sharks.start()
+      end, { desc = "Open animated ASCII Sharks startup screen" })
 
-          shortcut = {
-            {
-              desc = "󰈞 Find Files",
-              group = "Label",
-              action = "Telescope find_files",
-              key = "f",
-            },
-            {
-              desc = "󰱼 Live Grep",
-              group = "DiagnosticHint",
-              action = "Telescope live_grep",
-              key = "g",
-            },
-            {
-              desc = "󰋚 Recent Files",
-              group = "Number",
-              action = "Telescope oldfiles",
-              key = "r",
-            },
-            {
-              desc = "󰒲 Lazy",
-              group = "@property",
-              action = "Lazy",
-              key = "l",
-            },
-            {
-              desc = "󰅚 Quit",
-              group = "Error",
-              action = "qa",
-              key = "q",
-            },
-          },
+      vim.keymap.set("n", "<leader>as", function()
+        sharks.start()
+      end, { desc = "Open ASCII Sharks screen" })
 
-          project = {
-            enable = true,
-            limit = 8,
-            icon = "󰉋 ",
-            label = " Recent Projects",
-            action = "Telescope find_files cwd=",
-          },
-
-          mru = {
-            enable = true,
-            limit = 10,
-            icon = "󰋚 ",
-            label = " Recent Files",
-            cwd_only = false,
-          },
-
-          packages = {
-            enable = true,
-          },
-
-          footer = {
-            "",
-            "⚡ Happy coding with Neovim",
-          },
-        },
+      vim.api.nvim_create_autocmd("VimEnter", {
+        callback = function()
+          -- Only show on clean startup when no files or stdin were passed
+          if vim.fn.argc() == 0 and vim.api.nvim_buf_get_name(0) == "" and vim.bo.filetype == "" then
+            vim.schedule(function()
+              sharks.start()
+            end)
+          end
+        end,
       })
     end,
   },
