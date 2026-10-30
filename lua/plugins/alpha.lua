@@ -11,13 +11,21 @@ return {
     config = function()
       local sharks = require("ascii-sharks")
 
+      vim.api.nvim_create_user_command("Meteors", function()
+        sharks.start("meteor")
+      end, { desc = "Open animated Meteorite Shower startup screen" })
+
+      vim.api.nvim_create_user_command("Dragon", function()
+        sharks.start("dragon")
+      end, { desc = "Open animated ASCII Dragon startup screen" })
+
       vim.api.nvim_create_user_command("Sharks", function()
-        sharks.start()
+        sharks.start("sharks")
       end, { desc = "Open animated ASCII Sharks startup screen" })
 
       vim.keymap.set("n", "<leader>as", function()
         sharks.start()
-      end, { desc = "Open ASCII Sharks screen" })
+      end, { desc = "Open ASCII startup screen" })
 
       vim.api.nvim_create_autocmd("VimEnter", {
         callback = function()
